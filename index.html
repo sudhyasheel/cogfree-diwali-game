@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Diya-Man — A Diwali Game by Cogfree</title>
+<meta name="description" content="Eat every diya. Dodge the client feedback. A Diwali arcade game from Cogfree.">
+<meta name="theme-color" content="#070B1A">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Diya-Man — A Diwali Game by Cogfree">
+<meta property="og:description" content="Eat every diya. Dodge the client feedback. Can your team survive 'Make the Logo Bigger'?">
+<meta property="og:image" content="assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="assets/og-image.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%AA%94%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- INTRO: fake chat -->
+  <section id="intro" class="screen active">
+    <div class="chat">
+      <header class="chat-head">
+        <div class="avatar" aria-hidden="true">C</div>
+        <div class="who"><div class="name" data-t="intro.contactName"></div><div class="status" data-t="intro.status"></div></div>
+        <div class="badge" data-t="intro.badge"></div>
+      </header>
+      <div class="chat-body" id="chatBody">
+        <div class="chip" data-t="intro.time"></div>
+      </div>
+      <div class="chat-foot">
+        <button id="btnPlay" class="reply" hidden data-t="intro.reply"></button>
+        <p class="howto" data-t="intro.howto"></p>
+        <div class="foot-logo" data-logo="26"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOADING -->
+  <section id="loading" class="screen">
+    <div class="load-box">
+      <div class="load-label" id="loadLabel"></div>
+      <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+      <div class="load-pct" id="loadPct">0%</div>
+    </div>
+  </section>
+
+  <!-- GAME -->
+  <section id="game" class="screen">
+    <header id="hudTop">
+      <div class="hud-cell"><span class="hud-k" data-t="hud.score"></span><span class="hud-v" id="hScore">0</span></div>
+      <div class="hud-cell center"><span class="hud-k"><svg class="diya-ico" viewBox="0 0 20 20" aria-hidden="true"><ellipse cx="10" cy="14" rx="8" ry="4.2" fill="#b4733a"/><ellipse cx="10" cy="12.6" rx="6.4" ry="2.6" fill="#5a3216"/><path d="M10 2c2.6 3 2.2 6-0.2 8.6C7.4 8 7.4 5 10 2z" fill="#ffb02e"/></svg><span data-t="hud.lit"></span></span><span class="hud-v" id="hLit">0%</span></div>
+      <div class="hud-cell right"><span class="hud-k" data-t="hud.best"></span><span class="hud-v" id="hBest">0</span></div>
+    </header>
+
+    <div id="stage">
+      <canvas id="cv"></canvas>
+      <div id="toast" role="status" aria-live="polite"></div>
+      <div id="ready"></div>
+      <div id="stamp"><div id="stampMain"></div><div id="stampSub"></div></div>
+    </div>
+
+    <footer id="hudBot">
+      <div class="lives"><span class="hud-k" data-t="hud.lives"></span><span id="lives" class="lives-row"></span></div>
+      <div class="bot-right">
+        <svg id="ring" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="14" class="ring-bg"/><circle id="ringFg" cx="18" cy="18" r="14" class="ring-fg"/><text x="18" y="22.5" text-anchor="middle" class="ring-rs">₹</text></svg>
+        <button id="btnPause" class="icon-btn" data-aria="hud.pauseAria">❚❚</button>
+        <button id="btnMute" class="icon-btn" data-aria="hud.muteAria">🔊</button>
+      </div>
+    </footer>
+
+    <div id="dpad" aria-hidden="true">
+      <button data-dir="0" class="dp up" tabindex="-1">▲</button>
+      <button data-dir="1" class="dp left" tabindex="-1">◀</button>
+      <button data-dir="2" class="dp down" tabindex="-1">▼</button>
+      <button data-dir="3" class="dp right" tabindex="-1">▶</button>
+    </div>
+
+    <div id="pause" class="overlay" hidden role="dialog" aria-modal="true" aria-labelledby="pauseTitle">
+      <div class="pause-box">
+        <div id="pauseTitle" class="pause-title"><span data-t="pause.title"></span><span class="dots"><i>.</i><i>.</i><i>.</i></span></div>
+        <button id="pResume" class="btn" data-t="pause.resume"></button>
+        <button id="pRestart" class="btn ghost" data-t="pause.restart"></button>
+        <button id="pSound" class="btn ghost"></button>
+        <button id="pDpad" class="btn ghost"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- END -->
+  <section id="end" class="screen">
+    <div class="end-box">
+      <div id="eHappy" class="e-happy" hidden></div>
+      <div class="e-k" data-t="end.scoreLabel"></div>
+      <div id="eScore" class="e-score">0</div>
+      <div id="eTitle" class="e-title"></div>
+      <div class="e-stats">
+        <div><span data-t="end.lit"></span><b id="eLit"></b></div>
+        <div><span data-t="end.eaten"></span><b id="eEaten"></b></div>
+        <div><span data-t="end.time"></span><b id="eTime"></b></div>
+      </div>
+      <div id="eBest" class="e-best"></div>
+      <p class="e-msg" data-t="end.message"></p>
+      <div class="e-btns">
+        <button id="btnShare" class="btn" data-t="end.share"></button>
+        <button id="btnDownload" class="btn ghost" data-t="end.download"></button>
+        <button id="btnCopy" class="btn ghost" data-t="end.copy"></button>
+        <button id="btnAgain" class="btn alt" data-t="end.again"></button>
+      </div>
+      <div class="foot-logo" data-logo="30"></div>
+      <p class="e-foot" data-t="end.footer"></p>
+    </div>
+  </section>
+
+  <footer id="credit" data-t="credit"></footer>
+
+</div>
+<noscript><p style="color:#fff;padding:2rem">Diya-Man needs JavaScript. Happy Diwali anyway 🪔</p></noscript>
+<script src="game.js" defer></script>
+</body>
+</html>
